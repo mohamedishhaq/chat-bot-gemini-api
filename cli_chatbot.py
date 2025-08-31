@@ -48,7 +48,7 @@ def chat_loop():
 
     # Initialize conversation history
     history = [{"role": "user", "parts": f"System instruction: {system_prompt}"}]
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.5-flash")
 
     while True:
         user_input = input("You: ")
