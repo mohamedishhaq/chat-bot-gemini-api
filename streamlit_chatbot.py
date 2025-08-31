@@ -10,7 +10,7 @@ import os
 from datetime import datetime
 
 # 🔑 Configure Gemini with hardcoded API key
-GEMINI_API_KEY = "AIzaSyDxeeCufoho5j_yQDkG0Qit5c5xOUyhEiM"  # replace with your key
+GEMINI_API_KEY = "your_api_key_here"  # replace with your key
 genai.configure(api_key=GEMINI_API_KEY)
 
 # File to store chat history locally
