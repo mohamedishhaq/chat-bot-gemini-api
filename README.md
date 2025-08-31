@@ -14,13 +14,13 @@ Both versions support **multiple personas**:
 ---
 
 ## 📂 Project Structure
-
+```
   ├── cli_chatbot.py # Command-line chatbot
   ├── streamlit_chatbot.py # Streamlit web chatbot
   ├── requirements.txt # Python dependencies
   ├── chat_history.json # Saved conversation history (created at runtime)
   └── README.md # Project documentation
-
+```
 
 ---
 
