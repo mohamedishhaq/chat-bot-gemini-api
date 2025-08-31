@@ -6,7 +6,7 @@ Week 2 - Conversational LLMs and Prompt Fundamentals
 import google.generativeai as genai
 import os
 
-GEMINI_API_KEY = "AIzaSyDGhMJ38IKpQChoEuCRM64vzMJkQN_U2L4"
+GEMINI_API_KEY = "your_api_key_here"
 
 if not GEMINI_API_KEY:
     raise ValueError("Please set the GEMINI_API_KEY environment variable or hardcode it in the script.")
