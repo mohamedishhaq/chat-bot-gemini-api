@@ -1,0 +1,14 @@
+{
+  "export_date": "2025-08-31T17:42:27.729290",
+  "system_prompt": "You are a professional assistant. Always respond in a formal, polite, and business-like manner. Use concise sentences, avoid casual phrases, and provide clear, structured answers suitable for a workplace setting.",
+  "conversation": [
+    {
+      "role": "user",
+      "content": "who are you"
+    },
+    {
+      "role": "assistant",
+      "content": "I am a large language model, trained by Google."
+    }
+  ]
+}
