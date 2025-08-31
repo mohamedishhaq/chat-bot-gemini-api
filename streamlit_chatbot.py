@@ -6,11 +6,15 @@ Week 2 - Conversational LLMs and Prompt Fundamentals
 import streamlit as st
 import google.generativeai as genai
 import json
+import os
 from datetime import datetime
 
 # 🔑 Configure Gemini with hardcoded API key
-GEMINI_API_KEY = "AIzaSyDxeeCufoho5j_yQDkG0Qit5c5xOUyhEiM"
+GEMINI_API_KEY = "AIzaSyDxeeCufoho5j_yQDkG0Qit5c5xOUyhEiM"  # replace with your key
 genai.configure(api_key=GEMINI_API_KEY)
+
+# File to store chat history locally
+HISTORY_FILE = "chat_history.json"
 
 # Predefined system prompts
 SYSTEM_PROMPTS = {
@@ -32,27 +36,54 @@ SYSTEM_PROMPTS = {
 }
 
 # Page config
-st.set_page_config(page_title="Gemini AI Chat Assistant", page_icon="🤖", layout="wide")
+st.set_page_config(page_title=" AI Chat Assistant", page_icon="🤖", layout="wide")
 
-# Session state init
+# 🔹 Load chat history from JSON file if exists
 if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
+    if os.path.exists(HISTORY_FILE):
+        with open(HISTORY_FILE, "r") as f:
+            st.session_state.chat_history = json.load(f)
+    else:
+        st.session_state.chat_history = []
+
+# 🔹 Initialize system prompt
 if "system_prompt" not in st.session_state:
     st.session_state.system_prompt = SYSTEM_PROMPTS["Professional Assistant"]
+
+# 🔹 Initialize chat session
+if "chat_session" not in st.session_state:
+    model = genai.GenerativeModel(
+        "gemini-2.5-flash",
+        system_instruction=st.session_state.system_prompt
+    )
+    st.session_state.chat_session = model.start_chat(history=[])
 
 # Sidebar
 with st.sidebar:
     st.header("⚙️ Configuration")
     persona = st.selectbox("Choose Assistant", list(SYSTEM_PROMPTS.keys()))
     if st.session_state.system_prompt != SYSTEM_PROMPTS[persona]:
+        # Reset session when persona changes
         st.session_state.system_prompt = SYSTEM_PROMPTS[persona]
+        model = genai.GenerativeModel(
+            "gemini-2.5-flash",
+            system_instruction=st.session_state.system_prompt
+        )
+        st.session_state.chat_session = model.start_chat(history=[])
         st.session_state.chat_history = []
+        if os.path.exists(HISTORY_FILE):
+            os.remove(HISTORY_FILE)  # clear local file when persona changes
         st.rerun()
 
-    
-
     if st.button("Clear Conversation"):
+        model = genai.GenerativeModel(
+            "gemini-2.5-flash",
+            system_instruction=st.session_state.system_prompt
+        )
+        st.session_state.chat_session = model.start_chat(history=[])
         st.session_state.chat_history = []
+        if os.path.exists(HISTORY_FILE):
+            os.remove(HISTORY_FILE)  # clear local file
         st.rerun()
 
     if st.session_state.chat_history:
@@ -71,6 +102,7 @@ with st.sidebar:
 # Title
 st.title("🤖 AI Chat Assistant")
 st.caption("Conversational LLMs & Prompt Engineering")
+st.subheader(f"🧑‍💻 Current Persona: {persona}")
 
 # Chat display
 for msg in st.session_state.chat_history:
@@ -84,26 +116,21 @@ if user_input := st.chat_input("Type your message..."):
     with st.chat_message("user"):
         st.write(user_input)
 
-    # Create Gemini model with system prompt
-    model = genai.GenerativeModel(
-        "gemini-1.5-flash",
-        system_instruction=st.session_state.system_prompt
-    )
-
-    # Prepare conversation (skip "system" role, only user/assistant)
-    history = []
-    for msg in st.session_state.chat_history[-10:]:
-        history.append({"role": msg["role"], "parts": [msg["content"]]})
-
-    # Get response
+    # Get response from Gemini
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
             try:
-                response = model.generate_content(history)
+                response = st.session_state.chat_session.send_message(user_input)
                 reply = response.text.strip()
             except Exception as e:
                 reply = f"Error: {str(e)}"
             st.write(reply)
 
+    # Save assistant reply
     st.session_state.chat_history.append({"role": "assistant", "content": reply})
+
+    # 🔹 Save to local JSON file
+    with open(HISTORY_FILE, "w") as f:
+        json.dump(st.session_state.chat_history, f, indent=2)
+
     st.rerun()
