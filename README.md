@@ -38,25 +38,30 @@ Both versions support **multiple personas**:
 
 ## 🛠️ Setup Instructions
 
-### 1️⃣ Clone the repository
+### Clone the repository
 ```bash
 git clone https://github.com/your-username/gemini-chatbot.git
 cd gemini-chatbot
-
+```
+```
 python -m venv venv
 source venv/bin/activate   # macOS/Linux
 venv\Scripts\activate      # Windows
-
+```
 On Linux / macOS:
+```
 export GEMINI_API_KEY="your_api_key_here"
-
+```
 On Windows (PowerShell):
+```
 $env:GEMINI_API_KEY="your_api_key_here"
-
+```
 CLI Chatbot
+```
 python cli_chatbot.py
-
+```
 Streamlit Chatbot
+```
 streamlit run streamlit_chatbot.py
-
+```
 
