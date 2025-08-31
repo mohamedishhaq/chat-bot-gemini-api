@@ -48,6 +48,10 @@ python -m venv venv
 source venv/bin/activate   # macOS/Linux
 venv\Scripts\activate      # Windows
 ```
+Requirements
+```
+pip install -r requirements.txt
+```
 On Linux / macOS:
 ```
 export GEMINI_API_KEY="your_api_key_here"
@@ -64,4 +68,6 @@ Streamlit Chatbot
 ```
 streamlit run streamlit_chatbot.py
 ```
+
+
 
